@@ -79,9 +79,9 @@ h1 {
   padding: 18px;
 }
 
+.batch-switch,
 .subject-switch {
   display: inline-grid;
-  grid-template-columns: 1fr 1fr;
   gap: 4px;
   min-width: 240px;
   padding: 4px;
@@ -90,6 +90,16 @@ h1 {
   background: #eef3ef;
 }
 
+.batch-switch {
+  grid-template-columns: 1fr 1.25fr;
+  margin-right: 10px;
+}
+
+.subject-switch {
+  grid-template-columns: 1fr 1fr;
+}
+
+.batch-button,
 .subject-button,
 .secondary-button,
 .detail-button {
@@ -99,6 +109,7 @@ h1 {
   transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
 }
 
+.batch-button,
 .subject-button {
   min-height: 40px;
   padding: 0 18px;
@@ -107,6 +118,7 @@ h1 {
   font-weight: 700;
 }
 
+.batch-button.active,
 .subject-button.active {
   color: #fff;
   background: var(--teal);
@@ -335,5 +347,11 @@ mark {
   .subject-switch {
     width: 100%;
     min-width: 0;
+  }
+
+  .batch-switch {
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 10px;
   }
 }

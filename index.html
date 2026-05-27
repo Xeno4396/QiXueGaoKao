@@ -3,20 +3,25 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>内蒙古本科志愿查询</title>
+    <title>内蒙古高考志愿查询</title>
     <link rel="stylesheet" href="assets/styles.css">
   </head>
   <body>
     <header class="app-header">
       <div>
-        <p class="eyebrow">2025 普通高考本科批第一次录取数据</p>
-        <h1>内蒙古本科志愿查询</h1>
+        <p class="eyebrow">2025 普通高考录取最高分最低分</p>
+        <h1>内蒙古高考志愿查询</h1>
       </div>
       <div class="source-note">数据来源：内蒙古招生考试信息网</div>
     </header>
 
     <main class="layout">
       <section class="toolbar" aria-label="查询条件">
+        <div class="batch-switch" role="tablist" aria-label="批次">
+          <button class="batch-button active" type="button" data-batch="undergraduate" role="tab" aria-selected="true">本科</button>
+          <button class="batch-button" type="button" data-batch="vocational" role="tab" aria-selected="false">高职（专科）</button>
+        </div>
+
         <div class="subject-switch" role="tablist" aria-label="科类">
           <button class="subject-button active" type="button" data-category="历史类" role="tab" aria-selected="true">历史类</button>
           <button class="subject-button" type="button" data-category="物理类" role="tab" aria-selected="false">物理类</button>

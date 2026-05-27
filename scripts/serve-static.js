@@ -39,5 +39,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log(`内蒙古本科志愿查询站已启动：http://127.0.0.1:${port}/`);
+  console.log(`内蒙古高考志愿查询站已启动：http://127.0.0.1:${port}/`);
 });

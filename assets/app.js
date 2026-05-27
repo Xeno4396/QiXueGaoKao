@@ -1,14 +1,30 @@
 const state = {
-  groups: [],
-  majorsByGroup: new Map(),
+  datasets: {},
   provinces: {},
+  batch: "undergraduate",
   category: "历史类",
   sortKey: "ZYZZDF",
   sortDir: "desc",
   expandedKey: "",
 };
 
+const batchConfig = {
+  undergraduate: {
+    label: "本科",
+    groupUrl: "data/lq2.json",
+    majorUrl: "data/lq.json",
+    summary: "本科批第一次录取数据",
+  },
+  vocational: {
+    label: "高职（专科）",
+    groupUrl: "data/gzzk-lq2.json",
+    majorUrl: "data/gzzk-lq.json",
+    summary: "高职（专科）普通类第一次录取数据",
+  },
+};
+
 const els = {
+  batchButtons: [...document.querySelectorAll(".batch-button")],
   subjectButtons: [...document.querySelectorAll(".subject-button")],
   provinceFilter: document.querySelector("#provinceFilter"),
   minScore: document.querySelector("#minScore"),
@@ -59,22 +75,40 @@ function deriveCategory(row) {
   return row.KLMC.includes("历史") ? "历史类" : "物理类";
 }
 
+function currentDataset() {
+  return state.datasets[state.batch] || { groups: [], majorsByGroup: new Map() };
+}
+
 async function loadData() {
-  const [groups, majors, provinces] = await Promise.all([
-    fetch("data/lq2.json").then((res) => res.json()),
-    fetch("data/lq.json").then((res) => res.json()),
+  const [undergraduateGroups, undergraduateMajors, vocationalGroups, vocationalMajors, provinces] = await Promise.all([
+    fetch(batchConfig.undergraduate.groupUrl).then((res) => res.json()),
+    fetch(batchConfig.undergraduate.majorUrl).then((res) => res.json()),
+    fetch(batchConfig.vocational.groupUrl).then((res) => res.json()),
+    fetch(batchConfig.vocational.majorUrl).then((res) => res.json()),
     fetch("data/school-provinces.json").then((res) => res.json()),
   ]);
 
   state.provinces = provinces;
-  state.groups = groups.map((row) => {
+  state.datasets = {
+    undergraduate: buildDataset(undergraduateGroups, undergraduateMajors),
+    vocational: buildDataset(vocationalGroups, vocationalMajors),
+  };
+
+  fillProvinceOptions();
+  updateUnmatchedNotice();
+  render();
+}
+
+function buildDataset(groups, majors) {
+  const majorsByGroup = new Map();
+  const normalizedGroups = groups.map((row) => {
     const school = row.YXMC.trim();
     return {
       ...row,
       YXDH: row.YXDH.trim(),
       ZYZDH: row.ZYZDH.trim(),
       YXMC: school,
-      province: provinces[school] || "未匹配",
+      province: state.provinces[school] || "未匹配",
       category: deriveCategory(row),
       _key: groupKey(row),
     };
@@ -89,17 +123,16 @@ async function loadData() {
       ZYDH: major.ZYDH.trim(),
       _key: key,
     };
-    if (!state.majorsByGroup.has(key)) state.majorsByGroup.set(key, []);
-    state.majorsByGroup.get(key).push(entry);
+    if (!majorsByGroup.has(key)) majorsByGroup.set(key, []);
+    majorsByGroup.get(key).push(entry);
   }
 
-  fillProvinceOptions();
-  updateUnmatchedNotice();
-  render();
+  return { groups: normalizedGroups, majorsByGroup };
 }
 
 function fillProvinceOptions() {
-  const provinceOrder = [...new Set(Object.values(state.provinces))]
+  const { groups } = currentDataset();
+  const provinceOrder = [...new Set(groups.map((row) => row.province))]
     .filter(Boolean)
     .sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
 
@@ -110,10 +143,12 @@ function fillProvinceOptions() {
 }
 
 function updateUnmatchedNotice() {
-  const unmatchedCount = state.groups.filter((row) => row.province === "未匹配").length;
+  const { groups } = currentDataset();
+  const unmatchedCount = groups.filter((row) => row.province === "未匹配").length;
+  const batchLabel = batchConfig[state.batch].label;
   els.unmatchedNotice.textContent = unmatchedCount
-    ? `有 ${unmatchedCount} 条记录暂未匹配省份，可在 data/school-provinces.json 中补充。`
-    : "院校省份映射已覆盖当前本科数据。";
+    ? `${batchLabel}有 ${unmatchedCount} 条记录暂未匹配省份，可在 data/school-provinces.json 中补充。`
+    : `院校省份映射已覆盖当前${batchLabel}数据。`;
 }
 
 function getFilters() {
@@ -128,13 +163,13 @@ function getFilters() {
 
 function groupMatchesMajor(row, majorQuery) {
   if (!majorQuery) return true;
-  const majors = state.majorsByGroup.get(row._key) || [];
+  const majors = currentDataset().majorsByGroup.get(row._key) || [];
   return majors.some((major) => normalize(major.ZYMC).includes(majorQuery));
 }
 
 function getFilteredGroups() {
   const filters = getFilters();
-  return state.groups.filter((row) => {
+  return currentDataset().groups.filter((row) => {
     const score = toNumber(row.ZYZZDF);
     return row.category === state.category
       && (!filters.province || row.province === filters.province)
@@ -159,7 +194,7 @@ function render() {
   const rows = sortGroups(getFilteredGroups());
   const filters = getFilters();
   els.resultCount.textContent = `${rows.length} 条结果`;
-  els.filterSummary.textContent = `${state.category}，含普通类与专项类`;
+  els.filterSummary.textContent = `${batchConfig[state.batch].summary}，${state.category}，含普通类与专项类`;
 
   if (!rows.length) {
     els.resultsBody.innerHTML = '<tr><td colspan="9" class="empty">没有匹配结果，试试放宽分数或关键词。</td></tr>';
@@ -170,7 +205,7 @@ function render() {
 }
 
 function renderGroupRow(row, majorQuery) {
-  const majors = state.majorsByGroup.get(row._key) || [];
+  const majors = currentDataset().majorsByGroup.get(row._key) || [];
   const isExpanded = state.expandedKey === row._key;
   const summary = `
     <tr>
@@ -221,6 +256,21 @@ function renderDetailsRow(row, majors, majorQuery) {
 }
 
 function bindEvents() {
+  els.batchButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      state.batch = button.dataset.batch;
+      state.expandedKey = "";
+      els.batchButtons.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle("active", active);
+        item.setAttribute("aria-selected", String(active));
+      });
+      fillProvinceOptions();
+      updateUnmatchedNotice();
+      render();
+    });
+  });
+
   els.subjectButtons.forEach((button) => {
     button.addEventListener("click", () => {
       state.category = button.dataset.category;

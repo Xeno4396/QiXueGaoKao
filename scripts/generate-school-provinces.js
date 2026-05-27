@@ -2,7 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.resolve(__dirname, "..");
-const groups = JSON.parse(fs.readFileSync(path.join(root, "data", "lq2.json"), "utf8"));
+const groupFiles = ["lq2.json", "gzzk-lq2.json"];
+const groups = groupFiles.flatMap((file) => {
+  const filePath = path.join(root, "data", file);
+  return fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, "utf8")) : [];
+});
 const schools = [...new Set(groups.map((row) => row.YXMC.trim()))].sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
 
 const provinces = [
@@ -48,12 +52,37 @@ const cityRules = {
   澳门: ["澳门"]
 };
 
+const supplementalRules = {
+  新疆: ["阿克苏", "可克达拉", "克孜勒苏", "昆玉", "吐鲁番"],
+  内蒙古: ["阿拉善", "科尔沁", "满洲里", "乌海", "乌兰察布", "锡林郭勒", "扎兰屯"],
+  四川: ["巴中", "德阳", "广元", "泸州", "眉山", "南充", "天府新区", "资阳", "自贡"],
+  甘肃: ["白银", "酒泉", "平凉"],
+  辽宁: ["渤海船舶"],
+  河北: ["渤海理工"],
+  黑龙江: ["大兴安岭", "鹤岗", "七台河", "伊春"],
+  山东: ["东营", "莱芜", "日照", "威海", "淄博"],
+  湖北: ["鄂州", "汉江", "江汉", "三峡电力", "仙桃", "咸宁", "长江工程"],
+  江西: ["抚州", "和君"],
+  陕西: ["汉中", "铜川"],
+  河南: ["鹤壁", "济源", "焦作", "漯河", "濮阳"],
+  江苏: ["金肯", "九州", "明达", "炎黄"],
+  山西: ["晋城", "临汾"],
+  吉林: ["辽源", "四平", "松原", "长白山"],
+  宁夏: ["石嘴山"],
+  湖南: ["益阳", "岳阳", "张家界"],
+  福建: ["漳州"]
+};
+
 function detectProvince(name) {
   for (const province of provinces) {
     if (name.includes(province)) return province;
   }
 
   for (const [province, tokens] of Object.entries(cityRules)) {
+    if (tokens.some((token) => name.includes(token))) return province;
+  }
+
+  for (const [province, tokens] of Object.entries(supplementalRules)) {
     if (tokens.some((token) => name.includes(token))) return province;
   }
 
