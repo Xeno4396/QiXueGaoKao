@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>内蒙古本科志愿查询</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">2025 普通高考本科批第一次录取数据</p>
+        <h1>内蒙古本科志愿查询</h1>
+      </div>
+      <div class="source-note">数据来源：内蒙古招生考试信息网</div>
+    </header>
+
+    <main class="layout">
+      <section class="toolbar" aria-label="查询条件">
+        <div class="subject-switch" role="tablist" aria-label="科类">
+          <button class="subject-button active" type="button" data-category="历史类" role="tab" aria-selected="true">历史类</button>
+          <button class="subject-button" type="button" data-category="物理类" role="tab" aria-selected="false">物理类</button>
+        </div>
+
+        <div class="filters">
+          <label>
+            <span>省份</span>
+            <select id="provinceFilter">
+              <option value="">全部省份</option>
+            </select>
+          </label>
+          <label>
+            <span>最低分从</span>
+            <input id="minScore" type="number" inputmode="numeric" min="0" placeholder="如 480">
+          </label>
+          <label>
+            <span>最低分到</span>
+            <input id="maxScore" type="number" inputmode="numeric" min="0" placeholder="如 620">
+          </label>
+          <label>
+            <span>专业</span>
+            <input id="majorQuery" type="search" placeholder="法学 / 计算机">
+          </label>
+          <label>
+            <span>院校</span>
+            <input id="schoolQuery" type="search" placeholder="内蒙古大学">
+          </label>
+          <button id="resetFilters" class="secondary-button" type="button">清空</button>
+        </div>
+      </section>
+
+      <section class="summary" aria-live="polite">
+        <div>
+          <strong id="resultCount">加载中...</strong>
+          <span id="filterSummary">正在读取本地录取数据</span>
+        </div>
+        <div id="unmatchedNotice" class="muted"></div>
+      </section>
+
+      <section class="table-shell" aria-label="录取结果">
+        <table>
+          <thead>
+            <tr>
+              <th><button type="button" data-sort="YXMC">院校</button></th>
+              <th><button type="button" data-sort="province">省份</button></th>
+              <th><button type="button" data-sort="JHLBMC">计划类别</button></th>
+              <th><button type="button" data-sort="KLMC">科类</button></th>
+              <th><button type="button" data-sort="ZYZDH">专业组</button></th>
+              <th><button type="button" data-sort="ZYZLQRS">录取人数</button></th>
+              <th><button type="button" data-sort="ZYZZGF">最高分</button></th>
+              <th><button type="button" data-sort="ZYZZDF">最低分</button></th>
+              <th>专业明细</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <tr>
+              <td colspan="9" class="empty">正在加载数据...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
