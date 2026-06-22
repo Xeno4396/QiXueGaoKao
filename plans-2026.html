@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>2026 内蒙古高考招生计划查询</title>
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="app-header app-header-with-nav">
+      <a class="brand" href="index.html" aria-label="返回启学高考志愿首页"><span class="brand-mark">启</span><span>启学高考志愿</span></a>
+      <div class="app-heading">
+        <p class="eyebrow">2026 普通高校招生计划</p>
+        <h1>招生计划查询</h1>
+      </div>
+      <nav class="page-nav" aria-label="页面导航">
+        <a href="admission-scores-2025.html">录取分数</a>
+        <a class="active" href="plans-2026.html">招生计划</a>
+        <a href="plan-comparison-report.html">计划报告</a>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <section class="toolbar" aria-label="查询条件">
+        <div class="batch-switch plan-batch-switch" role="tablist" aria-label="批次">
+          <button class="batch-button" type="button" data-batch="earlyA" role="tab" aria-selected="false">本科提前A</button>
+          <button class="batch-button" type="button" data-batch="earlyB" role="tab" aria-selected="false">本科提前B</button>
+          <button class="batch-button active" type="button" data-batch="undergraduate" role="tab" aria-selected="true">本科批</button>
+          <button class="batch-button" type="button" data-batch="vocationalEarly" role="tab" aria-selected="false">专科提前</button>
+          <button class="batch-button" type="button" data-batch="vocational" role="tab" aria-selected="false">专科批</button>
+        </div>
+
+        <div class="filters plan-filters">
+          <label>
+            <span>科类</span>
+            <select id="categoryFilter">
+              <option value="">全部科类</option>
+            </select>
+          </label>
+          <label>
+            <span>省份</span>
+            <select id="provinceFilter">
+              <option value="">全部省份</option>
+            </select>
+          </label>
+          <label>
+            <span>选科要求</span>
+            <select id="requirementFilter">
+              <option value="">全部要求</option>
+            </select>
+          </label>
+          <label>
+            <span>计划数从</span>
+            <input id="minPlan" type="number" inputmode="numeric" min="0" placeholder="如 1">
+          </label>
+          <label>
+            <span>计划数到</span>
+            <input id="maxPlan" type="number" inputmode="numeric" min="0" placeholder="如 10">
+          </label>
+          <label>
+            <span>专业</span>
+            <input id="majorQuery" type="search" placeholder="法学 / 计算机">
+          </label>
+          <label>
+            <span>院校</span>
+            <input id="schoolQuery" type="search" placeholder="内蒙古大学">
+          </label>
+          <button id="resetFilters" class="secondary-button" type="button">清空</button>
+        </div>
+      </section>
+
+      <section class="summary" aria-live="polite">
+        <div>
+          <strong id="resultCount">加载中...</strong>
+          <span id="filterSummary">正在读取本地招生计划数据</span>
+        </div>
+        <div class="pager" aria-label="结果分页">
+          <button id="prevPage" class="pager-button" type="button">上一页</button>
+          <span id="pageInfo" class="muted">第 1 页</span>
+          <button id="nextPage" class="pager-button" type="button">下一页</button>
+        </div>
+      </section>
+
+      <section class="table-shell" aria-label="招生计划结果">
+        <table class="wide-table">
+          <thead>
+            <tr>
+              <th><button type="button" data-sort="yxmc">院校</button></th>
+              <th><button type="button" data-sort="province">省份</button></th>
+              <th><button type="button" data-sort="klmc">科类</button></th>
+              <th><button type="button" data-sort="jhzyzdm">专业组</button></th>
+              <th><button type="button" data-sort="zydh">专业<br>代号</button></th>
+              <th><button type="button" data-sort="zymc">专业名称</button></th>
+              <th><button type="button" data-sort="jhxzmc">计划性质</button></th>
+              <th><button type="button" data-sort="jhlbmc">计划类别</button></th>
+              <th><button type="button" data-sort="xznx">学制<br>年限</button></th>
+              <th><button type="button" data-sort="xf">学费</button></th>
+              <th><button type="button" data-sort="wyyzmc">外语语种</button></th>
+              <th><button type="button" data-sort="kycs">是否<br>口试</button></th>
+              <th><button type="button" data-sort="kskmyqzw">选科要求</button></th>
+              <th><button type="button" data-sort="bz">专业备注</button></th>
+              <th><button type="button" data-sort="bxdd">办学地点</button></th>
+              <th><button type="button" data-sort="syjh">招生<br>计划数</button></th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <tr>
+              <td colspan="16" class="empty">正在加载数据...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="assets/plans-2026.js"></script>
+  </body>
+</html>

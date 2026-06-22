@@ -3,89 +3,80 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>内蒙古高考志愿查询</title>
+    <meta name="description" content="启学高考志愿：内蒙古高考志愿数据查询与招生计划参考工具。">
+    <title>启学高考志愿</title>
     <link rel="stylesheet" href="assets/styles.css">
   </head>
-  <body>
-    <header class="app-header">
-      <div>
-        <p class="eyebrow">2025 普通高考录取最高分最低分</p>
-        <h1>内蒙古高考志愿查询</h1>
-      </div>
-      <div class="source-note">数据来源：内蒙古招生考试信息网</div>
+  <body class="home-page">
+    <header class="home-nav">
+      <a class="brand" href="index.html" aria-label="启学高考志愿首页">
+        <span class="brand-mark">启</span>
+        <span>启学高考志愿</span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="admission-scores-2025.html">录取分数</a>
+        <a href="plans-2026.html">招生计划</a>
+        <a href="plan-comparison-report.html">计划报告</a>
+      </nav>
     </header>
 
-    <main class="layout">
-      <section class="toolbar" aria-label="查询条件">
-        <div class="batch-switch" role="tablist" aria-label="批次">
-          <button class="batch-button active" type="button" data-batch="undergraduate" role="tab" aria-selected="true">本科</button>
-          <button class="batch-button" type="button" data-batch="vocational" role="tab" aria-selected="false">高职（专科）</button>
-        </div>
-
-        <div class="subject-switch" role="tablist" aria-label="科类">
-          <button class="subject-button active" type="button" data-category="历史类" role="tab" aria-selected="true">历史类</button>
-          <button class="subject-button" type="button" data-category="物理类" role="tab" aria-selected="false">物理类</button>
-        </div>
-
-        <div class="filters">
-          <label>
-            <span>省份</span>
-            <select id="provinceFilter">
-              <option value="">全部省份</option>
-            </select>
-          </label>
-          <label>
-            <span>最低分从</span>
-            <input id="minScore" type="number" inputmode="numeric" min="0" placeholder="如 480">
-          </label>
-          <label>
-            <span>最低分到</span>
-            <input id="maxScore" type="number" inputmode="numeric" min="0" placeholder="如 620">
-          </label>
-          <label>
-            <span>专业</span>
-            <input id="majorQuery" type="search" placeholder="法学 / 计算机">
-          </label>
-          <label>
-            <span>院校</span>
-            <input id="schoolQuery" type="search" placeholder="内蒙古大学">
-          </label>
-          <button id="resetFilters" class="secondary-button" type="button">清空</button>
+    <main>
+      <section class="home-hero" aria-labelledby="hero-title">
+        <img src="assets/qixue-hero.png" alt="书桌与校园景观">
+        <div class="home-hero-overlay"></div>
+        <div class="home-hero-content">
+          <p class="home-kicker">内蒙古 · 高考志愿数据工具</p>
+          <h1 id="hero-title">启学高考志愿</h1>
+          <p class="home-lead">从录取分数到招生计划，把需要对比的信息放在一处，帮助你更从容地做出志愿选择。</p>
+          <a class="hero-action" href="#tools">开始查询 <span aria-hidden="true">↓</span></a>
         </div>
       </section>
 
-      <section class="summary" aria-live="polite">
+      <section id="tools" class="tool-section" aria-labelledby="tool-title">
+        <div class="section-heading">
+          <p>查询入口</p>
+          <h2 id="tool-title">选择你现在需要的信息</h2>
+        </div>
+        <div class="tool-grid">
+          <a class="tool-card tool-card-primary" href="admission-scores-2025.html">
+            <span class="tool-index">01</span>
+            <div>
+              <p class="tool-meta">2025 普通高考</p>
+              <h3>录取最高分 / 最低分</h3>
+              <p>按本科或高职（专科）、历史类或物理类、省份、最低分和专业查询录取情况。</p>
+            </div>
+            <span class="tool-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="tool-card" href="plans-2026.html">
+            <span class="tool-index">02</span>
+            <div>
+              <p class="tool-meta">2026 普通高校</p>
+              <h3>招生计划查询</h3>
+              <p>按批次、科类、院校、省份和选科要求查看招生专业与计划数。</p>
+            </div>
+            <span class="tool-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="tool-card" href="plan-comparison-report.html">
+            <span class="tool-index">03</span>
+            <div>
+              <p class="tool-meta">2026 对比 2025</p>
+              <h3>招生计划变化报告</h3>
+              <p>查看本科批与高职（专科）批招生计划、院校和专业的年度变化。</p>
+            </div>
+            <span class="tool-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="home-note">
         <div>
-          <strong id="resultCount">加载中...</strong>
-          <span id="filterSummary">正在读取本地录取数据</span>
+          <p class="home-kicker">使用提醒</p>
+          <h2>数据用于查询与参考</h2>
         </div>
-        <div id="unmatchedNotice" class="muted"></div>
-      </section>
-
-      <section class="table-shell" aria-label="录取结果">
-        <table>
-          <thead>
-            <tr>
-              <th><button type="button" data-sort="YXMC">院校</button></th>
-              <th><button type="button" data-sort="province">省份</button></th>
-              <th><button type="button" data-sort="JHLBMC">计划类别</button></th>
-              <th><button type="button" data-sort="KLMC">科类</button></th>
-              <th><button type="button" data-sort="ZYZDH">专业组</button></th>
-              <th><button type="button" data-sort="ZYZLQRS">录取人数</button></th>
-              <th><button type="button" data-sort="ZYZZGF">最高分</button></th>
-              <th><button type="button" data-sort="ZYZZDF">最低分</button></th>
-              <th>专业明细</th>
-            </tr>
-          </thead>
-          <tbody id="resultsBody">
-            <tr>
-              <td colspan="9" class="empty">正在加载数据...</td>
-            </tr>
-          </tbody>
-        </table>
+        <p>录取与招生计划数据均整理自内蒙古招生考试信息网公开页面。填报志愿前，请以考试院当期公布的正式信息为准。</p>
       </section>
     </main>
 
-    <script src="assets/app.js"></script>
+    <footer class="site-footer">启学高考志愿 · 内蒙古高考志愿数据查询</footer>
   </body>
 </html>
